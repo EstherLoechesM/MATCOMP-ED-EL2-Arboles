@@ -2,6 +2,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 class MainTest {
+    //Necesitamos un metodo especifico para sumar MiLista
     public int sumarMiLista(MiLista<Integer> lista){
         int total=0;
         for(int i=0; i<lista.size();i++){
@@ -36,6 +37,7 @@ class MainTest {
         //iv. Verifica que la suma es la misma cuando se suman los elementos de los subárboles izquierdo y derecho
         MiLista ramaIzq= arbol.getSubArbolIzquierda();
         MiLista ramaDer= arbol.getSubArbolDerecha();
+        //La suma de las dos ramas es igual a la suma total, porque la raiz, aunque no la contemos tiene valor 0
         int sumaTotal= sumarMiLista(ramaIzq)+ sumarMiLista(ramaDer);
 
         System.out.println("Suma rama der mas izq: " +sumaTotal);

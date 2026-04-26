@@ -168,43 +168,31 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
         return izqCorrecto && derCorrecto;
 
     }
+    // Dentro de tu clase de Nodo o Arbol:
     public MiLista<T> getCamino(T valorBuscado) {
-        // 1. Caso base: Si este nodo es nulo, no hay camino
-        if (this.dato == null) {
-            return null;
-        }
+        MiLista<T> camino = new MiLista<>();
+        camino.add(this.dato); // Añadimos el actual
 
-        // 2. Caso base: Encontramos el valor
         if (this.dato.equals(valorBuscado)) {
-            MiLista<T> camino = new MiLista<>();
-            camino.add(this.dato); // Añadimos este nodo al camino
-            tamaño++;
-            return camino;
+            return camino; // ¡Encontrado!
         }
 
-        // 3. Caso recursivo: Buscar en hijos
-        // Como es un BST, sabemos si ir a la izq o der usando compareTo
-        MiLista<T> resultado = null;
-
-        if (valorBuscado.compareTo(this.dato) < 0) {
-            // El valor es menor, buscamos en la izquierda
-            if (this.izq != null) {
-                resultado = this.izq.getCamino(valorBuscado);
+        // Buscamos en el hijo correcto según el valor
+        if (valorBuscado.compareTo(this.dato) < 0 && this.izq != null) {
+            MiLista<T> caminoIzq = this.izq.getCamino(valorBuscado);
+            if (caminoIzq != null) {
+                camino.addAll(caminoIzq); // Unimos el camino
+                return camino;
             }
-        } else {
-            // El valor es mayor, buscamos en la derecha
-            if (this.der != null) {
-                resultado = this.der.getCamino(valorBuscado);
+        } else if (valorBuscado.compareTo(this.dato) > 0 && this.der != null) {
+            MiLista<T> caminoDer = this.der.getCamino(valorBuscado);
+            if (caminoDer != null) {
+                camino.addAll(caminoDer); // Unimos el camino
+                return camino;
             }
         }
 
-        // 4. Si encontramos el camino en los hijos, lo completamos con el padre
-        if (resultado != null) {
-            resultado.add(this.dato);
-            return resultado;
-        }
-
-        return null; // No se encontró
+        return null; // No está en ninguna rama
     }
 
     //Altura y grado
