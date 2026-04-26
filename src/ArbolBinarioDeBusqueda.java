@@ -1,18 +1,18 @@
-import java.util.ArrayList;
-import java.util.List;
 public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
     protected T dato;
     protected ArbolBinarioDeBusqueda<T> der;
     protected ArbolBinarioDeBusqueda<T> izq;
+    protected int tamaño;
 
     //Constructor vacio
     public ArbolBinarioDeBusqueda(){
         this.dato=null;
         this.izq=null;
         this.der=null;
+        this.tamaño=0;
     }
-    public List<T> getListaDatosNivel(int nivel) {
-        List<T> resultado = new ArrayList<>();
+    public MiLista<T> getListaDatosNivel(int nivel) {
+        MiLista<T> resultado = new MiLista<>();
 
         // 1. Si el árbol está vacío, devolvemos la lista vacía
         if (this.dato == null) {
@@ -47,27 +47,29 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
                     this.izq=new ArbolBinarioDeBusqueda<>();
                 }
                 this.izq.add(nuevo);
+                tamaño++;
             }else if(nuevo.compareTo(this.dato)>0){
                 if (this.der==null){
                     this.der=new ArbolBinarioDeBusqueda<>();
                 }
                 this.der.add(nuevo);
+                tamaño++;
             }
         }
     }
-    public List<T> getSubArbolIzquierda() {
+    public MiLista<T> getSubArbolIzquierda() {
         // Si no hay hijo izquierdo:
         if (this.izq == null) {
-            return new ArrayList<>();
+            return new MiLista<>();
         }
         // Si existe:
         return this.izq.getListaPreOrden();
     }
 
-    public List<T> getSubArbolDerecha() {
+    public MiLista<T> getSubArbolDerecha() {
         // Si no hay hijo derecho:
         if (this.der == null) {
-            return new ArrayList<>();
+            return new MiLista<>();
         }
         // Si existe:
         return this.der.getListaPreOrden();
@@ -166,33 +168,44 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
         return izqCorrecto && derCorrecto;
 
     }
-    public List<T> getCamino(int indiceObjetivo, int indiceActual){
-           //Caso base:
-        if (indiceObjetivo==indiceActual){
-            List<T> camino=new ArrayList<>();
-            camino.add(this.dato);
-            return camino;
-        }
-            //Buscamos por la izquierda
-        if (this.izq != null) {
-            List<T> caminoIzq = this.izq.getCamino(indiceObjetivo, 2 * indiceActual + 1);
-            if (caminoIzq != null) {
-                caminoIzq.add(0, this.dato);
-                return caminoIzq;
-            }
-        }
-            //Buscamos por la derecha
-        if (this.der!=null){
-            List<T> caminoDer=this.der.getCamino(indiceObjetivo,2*indiceActual+2);
-            if(caminoDer!=null){
-                caminoDer.add(0, this.dato);
-                return caminoDer;
-            }
-        }
-        //Si no esta, devolvemos null
-        return null;
+    public MiLista<T> getCamino(T valorBuscado) {
+        // 1. Caso base: Si este nodo es nulo, no hay camino
+        if (this.dato == null) {
+            return null;
         }
 
+        // 2. Caso base: Encontramos el valor
+        if (this.dato.equals(valorBuscado)) {
+            MiLista<T> camino = new MiLista<>();
+            camino.add(this.dato); // Añadimos este nodo al camino
+            tamaño++;
+            return camino;
+        }
+
+        // 3. Caso recursivo: Buscar en hijos
+        // Como es un BST, sabemos si ir a la izq o der usando compareTo
+        MiLista<T> resultado = null;
+
+        if (valorBuscado.compareTo(this.dato) < 0) {
+            // El valor es menor, buscamos en la izquierda
+            if (this.izq != null) {
+                resultado = this.izq.getCamino(valorBuscado);
+            }
+        } else {
+            // El valor es mayor, buscamos en la derecha
+            if (this.der != null) {
+                resultado = this.der.getCamino(valorBuscado);
+            }
+        }
+
+        // 4. Si encontramos el camino en los hijos, lo completamos con el padre
+        if (resultado != null) {
+            resultado.add(this.dato);
+            return resultado;
+        }
+
+        return null; // No se encontró
+    }
 
     //Altura y grado
     public int getAltura() {
@@ -223,9 +236,9 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
     //RECURSIVIDAD: CADA LLAMADA ES INDIVIDUAL
     //RECORRIDO ORDEN CENTRAL(Izquierda -> Raíz -> Derecha)
     //se ordenan de menor a mayor, como si aplastaras el arbol contra el suelo)
-    public List<T> getListaOrdenCentral(){
+    public MiLista<T> getListaOrdenCentral(){
         //En esta lista voy añadiendo los elementos de izq o der
-        List<T> lista = new ArrayList<>();
+        MiLista<T> lista = new MiLista<>();
         if(this.dato != null){
             if(this.izq != null){
                 //Si no es nulo usamos recursividad para repetir el proceso
@@ -240,8 +253,8 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
 
     }
     // RECORRIDO EN PRE-ORDEN (Raíz - Izquierda - Derecha)
-    public List<T> getListaPreOrden() {
-        List<T> lista = new ArrayList<>();
+    public MiLista<T> getListaPreOrden() {
+        MiLista<T> lista = new MiLista<>();
         if (this.dato != null) {
             lista.add(this.dato);
             if (this.izq != null) lista.addAll(this.izq.getListaPreOrden());
@@ -251,8 +264,8 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
     }
 
     // RECORRIDO EN POST-ORDEN (Izquierda - Derecha - Raíz)
-    public List<T> getListaPostOrden() {
-        List<T> lista = new ArrayList<>();
+    public MiLista<T> getListaPostOrden() {
+        MiLista<T> lista = new MiLista<>();
         if (this.dato != null) {
             if (this.izq != null) lista.addAll(this.izq.getListaPostOrden());
             if (this.der != null) lista.addAll(this.der.getListaPostOrden());
@@ -260,5 +273,4 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
         }
         return lista;
     }
-
 }

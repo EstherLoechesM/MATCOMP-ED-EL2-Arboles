@@ -1,9 +1,5 @@
-import java.util.ArrayList;
-import java.util.List;
-public class ArbolBinarioDeBusquedaEnteros {
-    protected Integer dato;
-    protected ArbolBinarioDeBusquedaEnteros der;
-    protected ArbolBinarioDeBusquedaEnteros izq;
+
+public class ArbolBinarioDeBusquedaEnteros extends ArbolBinarioDeBusqueda<Integer>{
     public ArbolBinarioDeBusquedaEnteros(){
         this.dato=null;
         this.izq=null;
@@ -24,5 +20,25 @@ public class ArbolBinarioDeBusquedaEnteros {
             resultado+=((ArbolBinarioDeBusquedaEnteros) this.der).getSuma();
         }
         return resultado;
+    }
+    @Override
+    public void add(Integer nuevo) {
+        if (this.dato == null) {
+            this.dato = nuevo;
+        } else {
+            if (nuevo.compareTo(this.dato) < 0) {
+                if (this.izq == null) {
+                    // Creamos un hijo de tipo Enteros, no genérico
+                    this.izq = new ArbolBinarioDeBusquedaEnteros();
+                }
+                this.izq.add(nuevo);
+            } else if (nuevo.compareTo(this.dato) > 0) {
+                if (this.der == null) {
+                    // Creamos un hijo de tipo Enteros, no genérico
+                    this.der = new ArbolBinarioDeBusquedaEnteros();
+                }
+                this.der.add(nuevo);
+            }
+        }
     }
 }

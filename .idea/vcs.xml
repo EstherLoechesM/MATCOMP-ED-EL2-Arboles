@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="VcsDirectoryMappings">
-    <mapping directory="$PROJECT_DIR$" vcs="Git" />
-<<<<<<< HEAD
-    <mapping directory="$PROJECT_DIR$/MATCOMP-ED-EL2-Arboles" vcs="Git" />
-=======
->>>>>>> c2c393ceabc5bfba0eb30d87036187a520bef298
+    <mapping directory="" vcs="Git" />
   </component>
 </project>
