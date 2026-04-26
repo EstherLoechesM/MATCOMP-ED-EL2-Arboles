@@ -11,32 +11,6 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
         this.der=null;
         this.tamaño=0;
     }
-    public MiLista<T> getListaDatosNivel(int nivel) {
-        MiLista<T> resultado = new MiLista<>();
-
-        // 1. Si el árbol está vacío, devolvemos la lista vacía
-        if (this.dato == null) {
-            return resultado;
-        }
-
-        // 2. CASO BASE: Si llegamos al nivel 0, hemos llegado al destino
-        if (nivel == 0) {
-            //hacemos add para añadir el dato de ese nivel y addAll para añadir lso elementos de los ninbeles inferiores
-            resultado.add(this.dato);
-            return resultado;
-        }
-
-        // 3. PASO RECURSIVO: Si aún no es 0, bajamos un nivel
-        // Le pedimos a los hijos que busquen en el nivel anterior (nivel - 1)
-        if (this.izq != null) {
-            resultado.addAll(this.izq.getListaDatosNivel(nivel - 1));
-        }
-        if (this.der != null) {
-            resultado.addAll(this.der.getListaDatosNivel(nivel - 1));
-        }
-
-        return resultado;
-    }
     ////OPERACIONES//////////////////////////////////////////////////
     public void add(T nuevo){
         if (this.dato==null){
@@ -167,6 +141,32 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
         }
         return izqCorrecto && derCorrecto;
 
+    }
+    public MiLista<T> getListaDatosNivel(int nivel) {
+        MiLista<T> resultado = new MiLista<>();
+
+        // 1. Si el árbol está vacío, devolvemos la lista vacía
+        if (this.dato == null) {
+            return resultado;
+        }
+
+        // 2. CASO BASE: Si llegamos al nivel 0, hemos llegado al destino
+        if (nivel == 0) {
+            //hacemos add para añadir el dato de ese nivel y addAll para añadir lso elementos de los ninbeles inferiores
+            resultado.add(this.dato);
+            return resultado;
+        }
+
+        // 3. PASO RECURSIVO: Si aún no es 0, bajamos un nivel
+        // Le pedimos a los hijos que busquen en el nivel anterior (nivel - 1)
+        if (this.izq != null) {
+            resultado.addAll(this.izq.getListaDatosNivel(nivel - 1));
+        }
+        if (this.der != null) {
+            resultado.addAll(this.der.getListaDatosNivel(nivel - 1));
+        }
+
+        return resultado;
     }
     // Dentro de tu clase de Nodo o Arbol:
     public MiLista<T> getCamino(T valorBuscado) {
