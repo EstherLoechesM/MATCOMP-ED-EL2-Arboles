@@ -1,0 +1,264 @@
+import java.util.ArrayList;
+import java.util.List;
+public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
+    protected T dato;
+    protected ArbolBinarioDeBusqueda<T> der;
+    protected ArbolBinarioDeBusqueda<T> izq;
+
+    //Constructor vacio
+    public ArbolBinarioDeBusqueda(){
+        this.dato=null;
+        this.izq=null;
+        this.der=null;
+    }
+    public List<T> getListaDatosNivel(int nivel) {
+        List<T> resultado = new ArrayList<>();
+
+        // 1. Si el árbol está vacío, devolvemos la lista vacía
+        if (this.dato == null) {
+            return resultado;
+        }
+
+        // 2. CASO BASE: Si llegamos al nivel 0, hemos llegado al destino
+        if (nivel == 0) {
+            //hacemos add para añadir el dato de ese nivel y addAll para añadir lso elementos de los ninbeles inferiores
+            resultado.add(this.dato);
+            return resultado;
+        }
+
+        // 3. PASO RECURSIVO: Si aún no es 0, bajamos un nivel
+        // Le pedimos a los hijos que busquen en el nivel anterior (nivel - 1)
+        if (this.izq != null) {
+            resultado.addAll(this.izq.getListaDatosNivel(nivel - 1));
+        }
+        if (this.der != null) {
+            resultado.addAll(this.der.getListaDatosNivel(nivel - 1));
+        }
+
+        return resultado;
+    }
+    ////OPERACIONES//////////////////////////////////////////////////
+    public void add(T nuevo){
+        if (this.dato==null){
+            this.dato=nuevo;
+        }else{
+            if(nuevo.compareTo(this.dato)<0){
+                if(this.izq==null){
+                    this.izq=new ArbolBinarioDeBusqueda<>();
+                }
+                this.izq.add(nuevo);
+            }else if(nuevo.compareTo(this.dato)>0){
+                if (this.der==null){
+                    this.der=new ArbolBinarioDeBusqueda<>();
+                }
+                this.der.add(nuevo);
+            }
+        }
+    }
+    public List<T> getSubArbolIzquierda() {
+        // Si no hay hijo izquierdo:
+        if (this.izq == null) {
+            return new ArrayList<>();
+        }
+        // Si existe:
+        return this.izq.getListaPreOrden();
+    }
+
+    public List<T> getSubArbolDerecha() {
+        // Si no hay hijo derecho:
+        if (this.der == null) {
+            return new ArrayList<>();
+        }
+        // Si existe:
+        return this.der.getListaPreOrden();
+    }
+    /// ////////////////////////////////////////////////////////
+    public boolean isArbolHomogeneo(){
+        //Primer caso: el arbol esta vacio
+        if (this.dato==null){
+            return true;
+        }
+        //Segundo caso: el arbol es solo raiz
+        if (this.izq==null && this.der==null){
+            return true;
+        }
+        //Tercer caso(falso): el arbol solo tiene un hijo
+        if (((this.izq==null) && (this.der!=null))|| ((this.izq!=null) && (this.der==null))){
+            return false;
+        }
+        return this.izq.isArbolHomogeneo() && this.der.isArbolHomogeneo();
+    }
+    public boolean isArbolCompleto(){
+        if (this.dato==null){
+            return true;
+        }
+        if (this.der==null && this.izq==null){
+            return true;
+        }
+        //Contar ambos lados
+        int altIzq=0;
+        if (this.izq!=null){
+            altIzq=this.izq.getAltura();
+        }else{
+            altIzq=0;
+        }
+        int altDer=0;
+        if (this.der!=null){
+            altDer=this.der.getAltura();
+        }else{
+            altDer=0;
+        }
+        // Comprobamos la altura Y ADEMÁS obligamos a los hijos a autocomprobarse
+        boolean alturaCorrecta = (altIzq == altDer);
+
+        // Si el hijo es null, no necesita chequeo (es correcto).
+        // Si existe, le obligamos a llamar a su propio isArbolCompleto()
+        boolean izqPerfecto = (this.izq == null) || this.izq.isArbolCompleto();
+        boolean derPerfecto = (this.der == null) || this.der.isArbolCompleto();
+
+        return alturaCorrecta && izqPerfecto && derPerfecto;
+    }
+    //Para hacer el arbol casi completo necesitamos comprobar comprobar que el numero de nodos es igual al de posiciones
+    public boolean isArbolCasiCompleto(){
+        int numNodos=this.contarNodos();
+        return compararPosiciones(0,numNodos);
+    }
+    public int contarNodos(){
+        if (this.dato==null){
+            return 0;
+        }
+        int contador=1;
+        if (this.izq != null){
+            contador += this.izq.contarNodos();
+        }
+        if (this.der != null){
+            contador += this.der.contarNodos();
+        }
+        return contador;
+    }
+    public boolean compararPosiciones(int indice, int numNodos){
+        if (this.dato == null) {
+            return true;
+        }
+        //hay un salto de posiciones
+        if (indice >=numNodos) return false;
+        // Hijo izquierdo: 2*i + 1
+        // Hijo derecho: 2*i + 2
+        // Para el hijo izquierdo
+        boolean izqCorrecto;
+        if (this.izq == null) {
+            // Si no hay hijo, es correcto (no rompe la regla)
+            izqCorrecto = true;
+        } else {
+            // Si hay hijo, obligamos a comprobarlo
+            izqCorrecto = this.izq.compararPosiciones(2 * indice + 1, numNodos);
+        }
+
+// Para el hijo derecho
+        boolean derCorrecto;
+        if (this.der == null) {
+            // Si no hay hijo, es correcto
+            derCorrecto = true;
+        } else {
+            // Si hay hijo, obligamos a comprobarlo
+            derCorrecto = this.der.compararPosiciones(2 * indice + 2, numNodos);
+        }
+        return izqCorrecto && derCorrecto;
+
+    }
+    public List<T> getCamino(int indiceObjetivo, int indiceActual){
+           //Caso base:
+        if (indiceObjetivo==indiceActual){
+            List<T> camino=new ArrayList<>();
+            camino.add(this.dato);
+            return camino;
+        }
+            //Buscamos por la izquierda
+        if (this.izq != null) {
+            List<T> caminoIzq = this.izq.getCamino(indiceObjetivo, 2 * indiceActual + 1);
+            if (caminoIzq != null) {
+                caminoIzq.add(0, this.dato);
+                return caminoIzq;
+            }
+        }
+            //Buscamos por la derecha
+        if (this.der!=null){
+            List<T> caminoDer=this.der.getCamino(indiceObjetivo,2*indiceActual+2);
+            if(caminoDer!=null){
+                caminoDer.add(0, this.dato);
+                return caminoDer;
+            }
+        }
+        //Si no esta, devolvemos null
+        return null;
+        }
+
+
+    //Altura y grado
+    public int getAltura() {
+        if (this.dato==null){
+            return 0;
+        }
+        //Altura en el lado izquierdo
+        int altIzq =0;
+        if (this.izq != null){
+            altIzq=this.izq.getAltura();
+        }else{
+            altIzq=0;
+        }
+        //Altura en el lado derecho
+        int altDer=0;
+        if(this.der !=null){
+            altDer=this.der.getAltura();
+        }else{
+            altIzq=0;
+        }
+        return 1 +Math.max(altIzq,altDer);
+    }
+
+    public int getGrado() {
+        return 2; // Por definición de árbol binario en este ejercicio
+    }
+/////ORDEN///////////////////////////////////////////////////////////////
+    //RECURSIVIDAD: CADA LLAMADA ES INDIVIDUAL
+    //RECORRIDO ORDEN CENTRAL(Izquierda -> Raíz -> Derecha)
+    //se ordenan de menor a mayor, como si aplastaras el arbol contra el suelo)
+    public List<T> getListaOrdenCentral(){
+        //En esta lista voy añadiendo los elementos de izq o der
+        List<T> lista = new ArrayList<>();
+        if(this.dato != null){
+            if(this.izq != null){
+                //Si no es nulo usamos recursividad para repetir el proceso
+                lista.addAll(this.izq.getListaOrdenCentral());}
+            //Se hace para cada llamada
+            lista.add(this.dato);
+            if (this.der != null){
+                //Hacemos addAll para pasar de la estructura jerarquica(arbol) a lineal(lista)
+                lista.addAll(this.der.getListaOrdenCentral());}
+        }
+        return lista;
+
+    }
+    // RECORRIDO EN PRE-ORDEN (Raíz - Izquierda - Derecha)
+    public List<T> getListaPreOrden() {
+        List<T> lista = new ArrayList<>();
+        if (this.dato != null) {
+            lista.add(this.dato);
+            if (this.izq != null) lista.addAll(this.izq.getListaPreOrden());
+            if (this.der != null) lista.addAll(this.der.getListaPreOrden());
+        }
+        return lista;
+    }
+
+    // RECORRIDO EN POST-ORDEN (Izquierda - Derecha - Raíz)
+    public List<T> getListaPostOrden() {
+        List<T> lista = new ArrayList<>();
+        if (this.dato != null) {
+            if (this.izq != null) lista.addAll(this.izq.getListaPostOrden());
+            if (this.der != null) lista.addAll(this.der.getListaPostOrden());
+            lista.add(this.dato);
+        }
+        return lista;
+    }
+
+}
