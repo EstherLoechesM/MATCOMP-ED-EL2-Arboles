@@ -11,6 +11,9 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
         this.der=null;
         this.tamaño=0;
     }
+    public boolean isEmpty(){
+        return this.dato==null;
+    }
     ////OPERACIONES//////////////////////////////////////////////////
     public void add(T nuevo){
         if (this.dato==null){

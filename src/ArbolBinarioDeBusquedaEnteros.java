@@ -41,4 +41,12 @@ public class ArbolBinarioDeBusquedaEnteros extends ArbolBinarioDeBusqueda<Intege
             }
         }
     }
+    //Necesitamos un metodo especifico para sumar MiLista
+    public int sumarMiLista(MiLista<Integer> lista){
+        int total=0;
+        for(int i=0; i<lista.size();i++){
+            total+=lista.getDato(i);
+        }
+        return total;
+    }
 }
