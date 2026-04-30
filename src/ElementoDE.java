@@ -8,4 +8,7 @@ public class ElementoDE<T> {
         this.siguiente=null;//Variable con la direccion de otros nodos
         this.anterior=null;
     }
+    public T getDato() {
+        return this.dato;
+    }
 }

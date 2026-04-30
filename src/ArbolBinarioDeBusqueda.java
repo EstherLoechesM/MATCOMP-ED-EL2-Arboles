@@ -37,7 +37,7 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
     public MiLista<T> getSubArbolIzquierda() {
         // Si no hay hijo izquierdo:
         if (this.izq == null) {
-            return new MiLista<>();
+            return new MiLista<>();//Para evitar que devuelva null
         }
         // Si existe:
         return this.izq.getListaPreOrden();
@@ -51,7 +51,7 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
         // Si existe:
         return this.der.getListaPreOrden();
     }
-    /// ////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
     public boolean isArbolHomogeneo(){
         //Primer caso: el arbol esta vacio
         if (this.dato==null){
@@ -71,6 +71,7 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
         if (this.dato==null){
             return true;
         }
+        //Caso base: que no tenga hijos(si tiene uno no es homogeneo)
         if (this.der==null && this.izq==null){
             return true;
         }
@@ -90,8 +91,7 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
         // Comprobamos la altura Y ADEMÁS obligamos a los hijos a autocomprobarse
         boolean alturaCorrecta = (altIzq == altDer);
 
-        // Si el hijo es null, no necesita chequeo (es correcto).
-        // Si existe, le obligamos a llamar a su propio isArbolCompleto()
+        // Si el hijo es null, no necesita comprobación (es correcto).
         boolean izqPerfecto = (this.izq == null) || this.izq.isArbolCompleto();
         boolean derPerfecto = (this.der == null) || this.der.isArbolCompleto();
 
@@ -119,7 +119,7 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
         if (this.dato == null) {
             return true;
         }
-        //hay un salto de posiciones
+        //hay un salto de posiciones en el lado izquierdo
         if (indice >=numNodos) return false;
         // Hijo izquierdo: 2*i + 1
         // Hijo derecho: 2*i + 2
@@ -129,7 +129,7 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
             // Si no hay hijo, es correcto (no rompe la regla)
             izqCorrecto = true;
         } else {
-            // Si hay hijo, obligamos a comprobarlo
+            // Si hay hijo comprobamos
             izqCorrecto = this.izq.compararPosiciones(2 * indice + 1, numNodos);
         }
 
@@ -139,7 +139,7 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
             // Si no hay hijo, es correcto
             derCorrecto = true;
         } else {
-            // Si hay hijo, obligamos a comprobarlo
+            // Si hay hijo comprobamos
             derCorrecto = this.der.compararPosiciones(2 * indice + 2, numNodos);
         }
         return izqCorrecto && derCorrecto;

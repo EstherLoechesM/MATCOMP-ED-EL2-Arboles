@@ -14,13 +14,17 @@ public class MiLista<T> {
     public int size(){
         return tamaño;
     }
-    public T getDato(int indice){
+    public ElementoDE<T> getPrimero(){return primero;}
+    public ElementoDE<T> getUltimo(){return ultimo;}
+    //getDato por indice
+    public T getDatoIndice(int indice){
         ElementoDE<T> actual=primero;
         for(int i=0; i<indice;i++){
             actual=actual.siguiente;
         }
         return actual.dato;
     }
+
     //No usamos un add de una lista doble ordenada porque sino no dejariamos que el arbol se organice correctamente
     public void add(T dato) {
         ElementoDE<T> nuevo=new ElementoDE<>(dato);
