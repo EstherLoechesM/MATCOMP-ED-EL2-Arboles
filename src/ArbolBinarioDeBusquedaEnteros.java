@@ -1,9 +1,13 @@
 
 public class ArbolBinarioDeBusquedaEnteros extends ArbolBinarioDeBusqueda<Integer>{
+    public int tamaño=0;
     public ArbolBinarioDeBusquedaEnteros(){
         this.dato=null;
         this.izq=null;
         this.der=null;
+    }
+    public int getSize(){
+        return tamaño;
     }
     public int getSuma(){
         if (this.dato==null){
@@ -25,6 +29,7 @@ public class ArbolBinarioDeBusquedaEnteros extends ArbolBinarioDeBusqueda<Intege
     public void add(Integer nuevo) {
         if (this.dato == null) {
             this.dato = nuevo;
+            tamaño++;
         } else {
             if (nuevo.compareTo(this.dato) < 0) {
                 if (this.izq == null) {
@@ -32,12 +37,14 @@ public class ArbolBinarioDeBusquedaEnteros extends ArbolBinarioDeBusqueda<Intege
                     this.izq = new ArbolBinarioDeBusquedaEnteros();
                 }
                 this.izq.add(nuevo);
+                tamaño++;
             } else if (nuevo.compareTo(this.dato) > 0) {
                 if (this.der == null) {
                     // Creamos un hijo de tipo Enteros, no genérico
                     this.der = new ArbolBinarioDeBusquedaEnteros();
                 }
                 this.der.add(nuevo);
+                tamaño++;
             }
         }
     }

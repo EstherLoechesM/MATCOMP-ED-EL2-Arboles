@@ -204,13 +204,40 @@ class ArbolBinarioDeBusquedaTest {
 
     @Test
     void getListaOrdenCentral() {
+        ArbolBinarioDeBusqueda<Integer> arbol = new ArbolBinarioDeBusqueda<>();
+        arbol.add(4);
+        arbol.add(2);
+
+        MiLista<Integer> lista = arbol.getListaOrdenCentral();
+
+        assertEquals(2, lista.size());
+        assertEquals(2, lista.getPrimero().getDato()); //
+        assertEquals(4, lista.getUltimo().getDato());
     }
 
     @Test
     void getListaPreOrden() {
+        ArbolBinarioDeBusqueda<Integer> arbol = new ArbolBinarioDeBusqueda<>();
+        arbol.add(4);
+        arbol.add(2);
+
+        MiLista<Integer> lista = arbol.getListaPreOrden();
+
+        assertEquals(2, lista.size());
+        assertEquals(4, lista.getPrimero().getDato()); //
+        assertEquals(2, lista.getUltimo().getDato());
     }
 
     @Test
     void getListaPostOrden() {
+        ArbolBinarioDeBusqueda<Integer> arbol = new ArbolBinarioDeBusqueda<>();
+        arbol.add(4);
+        arbol.add(2);
+
+        MiLista<Integer> lista = arbol.getListaPostOrden();
+
+        assertEquals(2, lista.size());
+        assertEquals(2, lista.getPrimero().getDato()); //
+        assertEquals(4, lista.getUltimo().getDato());
     }
 }
